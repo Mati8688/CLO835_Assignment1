@@ -52,6 +52,14 @@ resource "aws_instance" "my_amazon" {
   key_name                    = aws_key_pair.my_key.key_name
   vpc_security_group_ids             = [aws_security_group.my_sg.id]
   associate_public_ip_address = false
+  user_data                   = <<EOF
+  #!/bin/bash
+
+  sudo yum update -y
+  sudo yum install -y docker
+  sudo usermod -aG docker ec2-user
+  sudo service docker restart
+  EOF
 
   lifecycle {
     create_before_destroy = true
@@ -85,6 +93,15 @@ resource "aws_security_group" "my_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+  ingress {
+    description      = "Custom ports for colours"
+    from_port        = 8801
+    to_port          = 8803
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  
 
   egress {
     from_port        = 0
