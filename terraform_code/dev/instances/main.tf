@@ -56,7 +56,7 @@ resource "aws_instance" "my_amazon" {
   #!/bin/bash
 
   sudo yum update -y
-  sudo yum install -y docker
+  sudo yum install docker -y
   sudo usermod -aG docker ec2-user
   sudo service docker restart
   EOF
@@ -94,14 +94,30 @@ resource "aws_security_group" "my_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
   ingress {
-    description      = "Custom ports for colours"
-    from_port        = 8801
-    to_port          = 8803
+    description      = "Custom ports for Pink"
+    from_port        = 8081
+    to_port          = 8081
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  ingress {
+    description      = "Custom ports for Blue"
+    from_port        = 8082
+    to_port          = 8082
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
   
+  ingress {
+    description      = "Custom ports for Pink"
+    from_port        = 8083
+    to_port          = 8083
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
 
   egress {
     from_port        = 0
